@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Буквобек</title>
+</head>
+
+<body>
+    <h1>Главная страница</h1>
+    <h2>Буквобек</h2>
+    <div class="block__bookvobek">
+        <input class="bookvobek__input" type="text">
+        <button class="bookvobek__enter">Считать</button>
+        <div class="block">
+            <p class="bookvobek__answer"></p>
+        </div>
+    </div>
+
+    <script>
+        const input = document.querySelector('.bookvobek__input');
+        const button = document.querySelector('.bookvobek__enter');
+        const word = document.querySelector('.bookvobek__answer');
+        const block = document.querySelector('.block');
+
+        button.addEventListener('click', (event) => {
+            block.innerHTML = '';
+
+            fetch('http://localhost:3000/bookvobek', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    input: input.value
+                })
+            })
+                .then(response => response.json())
+                .then((data) => {
+                    const objectKey = Object.keys(data);
+                    word.textContent = `В слове ${input.value}`;
+
+                    for(let i = 0; i < objectKey.length; i++){
+                        const answerServer = document.createElement('p');
+                        answerServer.textContent = ` Имеется буква "${objectKey[i]}" в кол-ве "${data[objectKey[i]]}" шт`;
+                        block.appendChild(answerServer);
+                    }
+                })
+
+
+        })
+
+    </script>
+</body>
+
+</html>
